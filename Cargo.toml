@@ -1,8 +1,21 @@
 [package]
 name = "cardano-utxo-wasm"
 version = "0.1.0"
+authors = ["Siegfried <zhiqiang.lei@gmail.com>"]
 edition = "2021"
+homepage = "https://github.com/siegfried/cardano-utxo-wasm"
+repository = "https://github.com/siegfried/cardano-utxo-wasm.git"
+license = "MIT OR Apache-2.0"
+categories = ["accessibility", "algorithms", "cryptography::cryptocurrencies", "WebAssembly"]
+description = "General utilities of UTxO to ease the development of Cardano in WASM."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
+wasm-bindgen = "~0.2.81"
+wasm-bindgen-test = "~0.3.31"
+js-sys = "~0.3.58"
+utxo = "~0.2.2"
