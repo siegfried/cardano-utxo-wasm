@@ -4,6 +4,8 @@
 
 This package wraps UTxO helpers from Rust crates such as [utxo](https://github.com/siegfried/utxo) into WASM so that they can be used by Nodejs and the browsers.
 
+## Example
+
 ```typescript
 import type { Output } from 'cardano-utxo-wasm'
 import init, { select } from 'cardano-utxo-wasm'
@@ -36,7 +38,7 @@ const input1: Output = {
 }
 
 const input2: Output = {
-  id: { hash: "tx1", index: 1 },
+  id: { hash: "tx2", index: 2 },
   lovelace: BigInt('10000'),
   assets: []
 }
