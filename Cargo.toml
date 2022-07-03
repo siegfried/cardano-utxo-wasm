@@ -1,6 +1,6 @@
 [package]
 name = "cardano-utxo-wasm"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Siegfried <zhiqiang.lei@gmail.com>"]
 edition = "2021"
 homepage = "https://github.com/siegfried/cardano-utxo-wasm"
@@ -12,7 +12,7 @@ description = "General utilities of UTxO to ease the development of Cardano in W
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib"]
 
 [dependencies]
 wasm-bindgen = "~0.2.81"
