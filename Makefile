@@ -1,10 +1,10 @@
 .PHONY: clean
 
 clean:
-  rm -rf pkg
+	rm -rf pkg
 
-build:
-  wasm-pack build --release
+build: clean
+	wasm-pack build --release
 
-publish:
-  npm publish pkg
+publish: pkg
+	npm publish pkg/
