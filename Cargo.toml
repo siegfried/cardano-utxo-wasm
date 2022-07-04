@@ -18,4 +18,4 @@ crate-type = ["cdylib"]
 wasm-bindgen = "~0.2.81"
 wasm-bindgen-test = "~0.3.31"
 js-sys = "~0.3.58"
-utxo = "~0.2.2"
+utxo = "~0.3.0"
