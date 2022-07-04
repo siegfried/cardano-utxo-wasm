@@ -6,7 +6,7 @@ This package wraps UTxO helpers from Rust crates such as [utxo](https://github.c
 
 ## UTxO Selection Example
 
-In real use case, `policyId` and `assetName` are usually hex string fetched from query API such as GraphQL. `select` is expected to be used before you feed inputs to transaction builder.
+In real use cases, `policyId` and `assetName` are usually hex string fetched from query API such as GraphQL. `select` is expected to be used before you feed inputs to transaction builder.
 
 ```typescript
 import type { Output } from 'cardano-utxo-wasm'
