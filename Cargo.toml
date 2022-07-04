@@ -1,6 +1,6 @@
 [package]
 name = "cardano-utxo-wasm"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Siegfried <zhiqiang.lei@gmail.com>"]
 edition = "2021"
 homepage = "https://github.com/siegfried/cardano-utxo-wasm"
@@ -18,4 +18,4 @@ crate-type = ["cdylib"]
 wasm-bindgen = "~0.2.81"
 wasm-bindgen-test = "~0.3.31"
 js-sys = "~0.3.58"
-utxo = "~0.2.2"
+utxo = "~0.3.0"

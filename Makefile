@@ -8,3 +8,7 @@ build: clean
 
 publish: pkg
 	npm publish pkg/
+
+test:
+	wasm-pack test --headless --chrome --firefox
+
