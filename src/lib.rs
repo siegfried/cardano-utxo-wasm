@@ -220,7 +220,7 @@ pub fn select(
     let outputs: Vec<Output> = js_outputs.iter().map(|o| o.into()).collect();
     let threshold: Output = threshold.into();
     let total_output: Output =
-        try_sum(&outputs).ok_or_else(|| JsError::new(&"Outputs overflowed"))?;
+        try_sum(&outputs).ok_or_else(|| JsError::new("Outputs overflowed"))?;
 
     Ok(
         utxo::select(&mut inputs[..], &total_output, &threshold).and_then(
@@ -231,7 +231,7 @@ pub fn select(
                     let result = Array::new();
 
                     for output in selected {
-                        result.push(output.data.unwrap());
+                        result.push(output.data.expect("Unreachable"));
                     }
 
                     result.unchecked_into()
@@ -241,7 +241,7 @@ pub fn select(
                     let result = Array::new();
 
                     for output in unselected {
-                        result.push(output.data.unwrap());
+                        result.push(output.data.expect("Unreachable"));
                     }
 
                     result.unchecked_into()
