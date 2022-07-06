@@ -26,7 +26,8 @@ const input0: Output = {
   id: { hash: "tx0", index: 0 },
   lovelace: BigInt('100000'),
   assets: [
-    { policyId: 'policy1', assetName: 'asset1', quantity: BigInt('1000') },
+    { policyId: 'policy1', assetName: 'asset1', quantity: BigInt('2000') },
+    { policyId: 'policy2', assetName: 'asset2', quantity: BigInt('2000') },
     { policyId: 'policy3', assetName: 'asset3', quantity: BigInt('1000') },
     { policyId: 'policy4', assetName: 'asset4', quantity: BigInt('1000') }
   ]
@@ -38,7 +39,7 @@ const input1: Output = {
   lovelace: BigInt('1000'),
   assets: [
     { policyId: 'policy1', assetName: 'asset1', quantity: BigInt('2000') },
-    { policyId: 'policy2', assetName: 'asset2', quantity: BigInt('2000') }
+    { policyId: 'policy2', assetName: 'asset2', quantity: BigInt('1000') }
   ]
 }
 
@@ -49,7 +50,28 @@ const input2: Output = {
   assets: []
 }
 
+// A UTxO should not be selected because `input1` can cover all the assets needed.
+const input3: Output = {
+  id: { hash: "tx3", index: 3 },
+  lovelace: BigInt('10000'),
+  assets: [
+    { policyId: 'policy2', assetName: 'asset2', quantity: BigInt('1000') }
+  ]
+}
+
 init().then(() => {
-  console.log(select([input0, input1, input2], [output], { lovelace: BigInt('0'), assets: [] }))
+  const result = select(
+    [input0, input1, input2, input3],
+    [output],
+    { lovelace: BigInt('0'), assets: [] }
+  )
+
+  // [input1, input2]
+  console.log(result?.selected)
+
+  // [input0, input3]
+  console.log(result?.unselected)
+
+  console.log(result?.excess)
 })
 ```
