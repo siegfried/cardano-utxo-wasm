@@ -1,6 +1,6 @@
 [package]
 name = "cardano-utxo-wasm"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Siegfried <zhiqiang.lei@gmail.com>"]
 edition = "2021"
 homepage = "https://github.com/siegfried/cardano-utxo-wasm"
