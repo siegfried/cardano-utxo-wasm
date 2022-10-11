@@ -10,7 +10,7 @@ In real use cases, `policyId` and `assetName` are usually hex string fetched fro
 
 ```typescript
 import type { Output } from 'cardano-utxo-wasm'
-import init, { select } from 'cardano-utxo-wasm'
+import init, { select, sum } from 'cardano-utxo-wasm'
 
 // The output required to spend.
 const output: Output = {
@@ -60,6 +60,7 @@ const input3: Output = {
 }
 
 init().then(() => {
+  // Select the UTxOs for the output
   const result = select(
     [input0, input1, input2, input3],
     [output],
@@ -73,5 +74,10 @@ init().then(() => {
   console.log(result?.unselected)
 
   console.log(result?.excess)
+
+  // Sum the UTxOs to one
+  const total_output = sum([input0, input1, input2, input3])
+
+  console.log(total_output)
 })
 ```

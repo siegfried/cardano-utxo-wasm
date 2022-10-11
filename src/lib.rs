@@ -259,11 +259,33 @@ pub fn select(
     )
 }
 
+/**
+Sum Outputs to one.
+
+Return the summed result.
+
+Raises errors when there is any value overflowed.
+*/
+#[wasm_bindgen]
+pub fn sum(outputs: &JsOutputArray) -> Result<JsOutput, JsError> {
+    let js_outputs: Vec<JsOutput> = try_iter(outputs)
+        .unwrap()
+        .unwrap()
+        .into_iter()
+        .map(|i| i.unwrap().unchecked_into())
+        .collect();
+    let outputs: Vec<Output> = js_outputs.iter().map(|o| o.into()).collect();
+
+    try_sum(&outputs)
+        .and_then(|output| Some(output.into()))
+        .ok_or_else(|| JsError::new("Outputs overflowed"))
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
-        select, Asset, JsAsset, JsAssetArray, JsOutput, JsOutputArray, JsTransactionID, Output,
-        SelectResult,
+        select, sum, Asset, JsAsset, JsAssetArray, JsOutput, JsOutputArray, JsTransactionID,
+        Output, SelectResult,
     };
     use js_sys::{try_iter, Array, Object};
     use std::collections::BTreeMap;
@@ -459,5 +481,41 @@ mod tests {
             assert_eq!(unselected.len(), 1);
             assert_eq!(excess.lovelace(), 1200);
         }
+    }
+
+    #[wasm_bindgen_test]
+    fn test_output_sum() {
+        let outputs: JsOutputArray = {
+            let result = Array::new();
+
+            let mut output = Output {
+                value: 1000,
+                assets: BTreeMap::new(),
+                data: None,
+            };
+            output.insert_asset(("policy1".into(), "aname1".into()), 10000);
+
+            let output: JsOutput = output.into();
+            result.push(&output);
+
+            let mut output = Output {
+                value: 5000,
+                assets: BTreeMap::new(),
+                data: None,
+            };
+            output.insert_asset(("policy2".into(), "aname2".into()), 100000);
+
+            let output: JsOutput = output.into();
+            result.push(&output);
+
+            result.unchecked_into()
+        };
+        let result = sum(&outputs);
+        assert!(result.is_ok());
+        if let Ok(js_output) = result {
+            assert!(js_output.id().is_none());
+            assert_eq!(js_output.lovelace(), 6000);
+            assert_eq!(js_output.assets().unchecked_into::<Array>().length(), 2);
+        };
     }
 }
