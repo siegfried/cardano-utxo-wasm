@@ -11,11 +11,6 @@ use wasm_bindgen::{prelude::*, JsCast};
 
 #[wasm_bindgen(typescript_custom_section)]
 const TS_APPEND_CONTENT: &'static str = r#"
-export type TransactionID = {
-  hash: string
-  index: number
-}
-
 export type Asset = {
   policyId: string
   assetName: string
@@ -23,9 +18,9 @@ export type Asset = {
 }
 
 export type Output = {
-  id?: TransactionID
   lovelace: bigint
   assets: Array<Asset>
+  data?: any
 }
 
 export type SelectResult = {
@@ -37,21 +32,6 @@ export type SelectResult = {
 
 #[wasm_bindgen]
 extern "C" {
-    #[wasm_bindgen(typescript_type = "TransactionID")]
-    type JsTransactionID;
-
-    #[wasm_bindgen(method, getter)]
-    fn hash(this: &JsTransactionID) -> String;
-
-    #[wasm_bindgen(method, setter)]
-    fn set_hash(this: &JsTransactionID, hash: &str);
-
-    #[wasm_bindgen(method, getter)]
-    fn index(this: &JsTransactionID) -> u32;
-
-    #[wasm_bindgen(method, setter)]
-    fn set_index(this: &JsTransactionID, index: u32);
-
     #[wasm_bindgen(typescript_type = "Asset")]
     type JsAsset;
 
@@ -78,12 +58,6 @@ extern "C" {
 
     #[wasm_bindgen(typescript_type = "Output")]
     pub type JsOutput;
-
-    #[wasm_bindgen(method, getter)]
-    fn id(this: &JsOutput) -> Option<JsTransactionID>;
-
-    #[wasm_bindgen(method, setter)]
-    fn set_id(this: &JsOutput, id: &JsTransactionID);
 
     #[wasm_bindgen(method, getter)]
     fn lovelace(this: &JsOutput) -> u64;
@@ -284,7 +258,7 @@ pub fn sum(outputs: &JsOutputArray) -> Result<JsOutput, JsError> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        select, sum, Asset, JsAsset, JsAssetArray, JsOutput, JsOutputArray, JsTransactionID,
+        select, sum, Asset, JsAsset, JsAssetArray, JsOutput, JsOutputArray,
         Output, SelectResult,
     };
     use js_sys::{try_iter, Array, Object};
@@ -295,30 +269,9 @@ mod tests {
 
     wasm_bindgen_test_configure!(run_in_browser);
 
-    struct TransactionID<'a> {
-        hash: &'a str,
-        index: u32,
-    }
-
-    impl<'a> TransactionID<'a> {
-        fn new(hash: &'a str, index: u32) -> Self {
-            Self { hash, index }
-        }
-    }
-
-    impl From<TransactionID<'_>> for JsTransactionID {
-        fn from(value: TransactionID) -> Self {
-            let id: Self = Object::new().unchecked_into();
-            id.set_hash(value.hash);
-            id.set_index(value.index);
-            id
-        }
-    }
-
     #[wasm_bindgen_test]
     fn test_from_js_output_to_output() {
         let js_output: JsOutput = Object::new().unchecked_into();
-        js_output.set_id(&TransactionID::new("hash0", 0).into());
         js_output.set_lovelace(1000);
         let js_assets: JsAssetArray = {
             let assets = Array::new();
@@ -334,8 +287,6 @@ mod tests {
         js_output.set_assets(&js_assets);
 
         assert_eq!(js_output.lovelace(), 1000);
-        assert_eq!(js_output.id().unwrap().hash(), "hash0".to_string());
-        assert_eq!(js_output.id().unwrap().index(), 0);
         assert_eq!(js_output.assets().unchecked_into::<Array>().length(), 2);
 
         let output: Output = (&js_output).into();
@@ -373,7 +324,6 @@ mod tests {
 
         assert_eq!(js_output.lovelace(), 1000);
         assert_eq!(js_output.assets().unchecked_into::<Array>().length(), 2);
-        assert!(js_output.id().is_none());
     }
 
     #[wasm_bindgen_test]
@@ -416,7 +366,6 @@ mod tests {
             output.insert_asset(("policy4".into(), "aname2".into()), 100000);
 
             let output: JsOutput = output.into();
-            output.set_id(&TransactionID::new("hash1", 1).into());
             result.push(&output);
 
             let mut output = Output {
@@ -428,7 +377,6 @@ mod tests {
             output.insert_asset(("policy2".into(), "aname2".into()), 200000);
 
             let output: JsOutput = output.into();
-            output.set_id(&TransactionID::new("hash2", 2).into());
             result.push(&output);
 
             let output = Output {
@@ -438,7 +386,6 @@ mod tests {
             };
 
             let output: JsOutput = output.into();
-            output.set_id(&TransactionID::new("hash3", 3).into());
             result.push(&output);
 
             result.unchecked_into()
@@ -472,11 +419,7 @@ mod tests {
             let excess: JsOutput = result.excess();
 
             assert_eq!(selected.len(), 2);
-            assert_eq!(selected[0].id().unwrap().hash(), "hash2");
-            assert_eq!(selected[0].id().unwrap().index(), 2);
             assert_eq!(selected[0].lovelace(), 200);
-            assert_eq!(selected[1].id().unwrap().hash(), "hash3");
-            assert_eq!(selected[1].id().unwrap().index(), 3);
             assert_eq!(selected[1].lovelace(), 7000);
             assert_eq!(unselected.len(), 1);
             assert_eq!(excess.lovelace(), 1200);
@@ -513,7 +456,6 @@ mod tests {
         let result = sum(&outputs);
         assert!(result.is_ok());
         if let Ok(js_output) = result {
-            assert!(js_output.id().is_none());
             assert_eq!(js_output.lovelace(), 6000);
             assert_eq!(js_output.assets().unchecked_into::<Array>().length(), 2);
         };
