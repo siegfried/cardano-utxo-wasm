@@ -23,7 +23,7 @@ const output: Output = {
 
 // A UTxO should not be selected because there are 2 assets not needed.
 const input0: Output = {
-  id: { hash: "tx0", index: 0 },
+  data: { hash: "tx0", index: 0 },
   lovelace: BigInt('100000'),
   assets: [
     { policyId: 'policy1', assetName: 'asset1', quantity: BigInt('2000') },
@@ -35,7 +35,7 @@ const input0: Output = {
 
 // A UTxO should be selected because there are 2 assets needed.
 const input1: Output = {
-  id: { hash: "tx1", index: 1 },
+  data: { hash: "tx1", index: 1 },
   lovelace: BigInt('1000'),
   assets: [
     { policyId: 'policy1', assetName: 'asset1', quantity: BigInt('2000') },
@@ -45,14 +45,14 @@ const input1: Output = {
 
 // A UTxO should be selected because the lovelace was not enough in `input1`.
 const input2: Output = {
-  id: { hash: "tx2", index: 2 },
+  data: { hash: "tx2", index: 2 },
   lovelace: BigInt('10000'),
   assets: []
 }
 
 // A UTxO should not be selected because `input1` can cover all the assets needed.
 const input3: Output = {
-  id: { hash: "tx3", index: 3 },
+  data: { hash: "tx3", index: 3 },
   lovelace: BigInt('10000'),
   assets: [
     { policyId: 'policy2', assetName: 'asset2', quantity: BigInt('1000') }
