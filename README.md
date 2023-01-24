@@ -81,3 +81,7 @@ init().then(() => {
   console.log(total_output)
 })
 ```
+
+# Make a donation
+
+ADA: addr1qy8yxxrle7hq62zgpazaj7kj36nphqyyxey62wm694dgfds5kkvr22hlffqdj63vk8nf8rje5np37v4fwlpvj4c4qryqtcla0w
