@@ -84,4 +84,4 @@ init().then(() => {
 
 # Make a donation
 
-ADA: addr1qy8yxxrle7hq62zgpazaj7kj36nphqyyxey62wm694dgfds5kkvr22hlffqdj63vk8nf8rje5np37v4fwlpvj4c4qryqtcla0w
+ADA: addr1qyekuuu2szr9t525k7pve467lhuy6cdrwjfjrhjswatvgyc5kkvr22hlffqdj63vk8nf8rje5np37v4fwlpvj4c4qryqydr67v
