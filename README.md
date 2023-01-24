@@ -82,6 +82,6 @@ init().then(() => {
 })
 ```
 
-# Make a donation
+## Make a donation
 
 ADA: addr1qyekuuu2szr9t525k7pve467lhuy6cdrwjfjrhjswatvgyc5kkvr22hlffqdj63vk8nf8rje5np37v4fwlpvj4c4qryqydr67v
